@@ -1,0 +1,6 @@
+# StepSecurity Configuration
+step_security_api_key  = "your-api-key-here"
+step_security_customer = "your-customer-id-here"
+
+# JSON file path (optional, defaults to users.json)
+# users_json_file = "users.json"

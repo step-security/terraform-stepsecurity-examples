@@ -1,0 +1,62 @@
+{
+  "users": [
+    {
+      "user_name": "github-auditor-user",
+      "auth_type": "Github",
+      "policies": [
+        {
+          "type": "github",
+          "role": "auditor",
+          "scope": "organization",
+          "organization": "your-org-name"
+        }
+      ]
+    },
+    {
+      "email": "admin@yourcompany.com",
+      "auth_type": "SSO",
+      "policies": [
+        {
+          "type": "github",
+          "role": "admin",
+          "scope": "customer"
+        }
+      ]
+    },
+    {
+      "email": "org-auditor@yourcompany.com",
+      "auth_type": "SSO",
+      "policies": [
+        {
+          "type": "github",
+          "role": "auditor",
+          "scope": "organization",
+          "organization": "your-org-name"
+        }
+      ]
+    },
+    {
+      "email_suffix": "yourcompany.com",
+      "auth_type": "SSO",
+      "policies": [
+        {
+          "type": "github",
+          "role": "auditor",
+          "scope": "organization",
+          "organization": "your-org-name"
+        }
+      ]
+    },
+    {
+      "email": "local-admin@yourcompany.com",
+      "auth_type": "Local",
+      "policies": [
+        {
+          "type": "github",
+          "role": "admin",
+          "scope": "customer"
+        }
+      ]
+    }
+  ]
+}

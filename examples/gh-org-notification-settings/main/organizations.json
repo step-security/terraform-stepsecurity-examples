@@ -1,0 +1,70 @@
+{
+  "organizations": [
+    {
+      "owner": "your-main-org",
+      "notification_channels": {
+        "slack_webhook_url": "https://hooks.slack.com/services/YOUR/MAIN/WEBHOOK",
+        "teams_webhook_url": null,
+        "email": "security-alerts@yourcompany.com"
+      },
+      "notification_events": {
+        "domain_blocked": true,
+        "file_overwrite": true,
+        "new_endpoint_discovered": true,
+        "https_detections": true,
+        "secrets_detected": true,
+        "artifacts_secrets_detected": true,
+        "imposter_commits_detected": true,
+        "suspicious_network_call_detected": true,
+        "suspicious_process_events_detected": true,
+        "harden_runner_config_changes_detected": true,
+        "non_compliant_artifact_detected": false,
+        "run_blocked_by_policy": false
+      }
+    },
+    {
+      "owner": "your-dev-org",
+      "notification_channels": {
+        "slack_webhook_url": "https://hooks.slack.com/services/YOUR/DEV/WEBHOOK",
+        "teams_webhook_url": null,
+        "email": "dev-security@yourcompany.com"
+      },
+      "notification_events": {
+        "domain_blocked": true,
+        "file_overwrite": true,
+        "new_endpoint_discovered": false,
+        "https_detections": false,
+        "secrets_detected": true,
+        "artifacts_secrets_detected": true,
+        "imposter_commits_detected": false,
+        "suspicious_network_call_detected": false,
+        "suspicious_process_events_detected": false,
+        "harden_runner_config_changes_detected": false,
+        "non_compliant_artifact_detected": false,
+        "run_blocked_by_policy": false
+      }
+    },
+    {
+      "owner": "your-prod-org",
+      "notification_channels": {
+        "slack_webhook_url": "https://hooks.slack.com/services/YOUR/PROD/WEBHOOK",
+        "teams_webhook_url": "https://outlook.office.com/webhook/your-teams-webhook",
+        "email": "prod-security@yourcompany.com"
+      },
+      "notification_events": {
+        "domain_blocked": true,
+        "file_overwrite": true,
+        "new_endpoint_discovered": true,
+        "https_detections": true,
+        "secrets_detected": true,
+        "artifacts_secrets_detected": true,
+        "imposter_commits_detected": true,
+        "suspicious_network_call_detected": true,
+        "suspicious_process_events_detected": true,
+        "harden_runner_config_changes_detected": true,
+        "non_compliant_artifact_detected": true,
+        "run_blocked_by_policy": true
+      }
+    }
+  ]
+}

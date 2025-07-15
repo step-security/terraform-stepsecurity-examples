@@ -1,0 +1,45 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+terraform.rc
+.terraformrc
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# StepSecurity specific
+step-security.json
+.stepsecurity/
+.claude/
+
+# Backup files
+*.backup
+*.bak
+
+# tf state files
+*.tfstate
+*.tfstate.*
