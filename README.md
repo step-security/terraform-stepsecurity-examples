@@ -49,7 +49,6 @@ The StepSecurity provider requires authentication using API keys. Set up your cr
 export STEP_SECURITY_API_KEY="your-api-key"
 export STEP_SECURITY_CUSTOMER="your-customer-name"
 ```
-d
 Or configure directly in your Terraform:
 
 ```hcl
@@ -94,26 +93,13 @@ Each example includes comprehensive documentation:
    terraform apply
    ```
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🆘 Support
 
 - **Issues**: Report bugs and request features in our [GitHub Issues](https://github.com/step-security/terraform-stepsecurity-examples/issues)
-- **Documentation**: Check our [documentation](./docs/) for detailed guides
-- **Community**: Join our community discussions
 
 ## 📈 Resources
 
 - [StepSecurity Provider Documentation](https://registry.terraform.io/providers/step-security/stepsecurity/latest/docs)
-- [Terraform Best Practices](https://www.terraform.io/docs/cloud/guides/recommended-practices/index.html)
 - [StepSecurity Platform](https://app.stepsecurity.io)
 
 ---
-
-Made with ❤️ by the StepSecurity team

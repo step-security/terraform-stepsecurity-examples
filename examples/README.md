@@ -10,8 +10,8 @@ Examples for configuring automated security remediation through policy-driven pu
 **Primary Resource:** `stepsecurity_policy_driven_pr`
 
 **Use Cases:**
-- Automated security PR creation
-- Repository-specific security policies
+- Automated security PR/issue creation
+- Organization-specific security policies
 - GitHub Actions hardening
 - Security finding remediation
 
@@ -24,7 +24,6 @@ Examples for managing GitHub organization notification settings.
 - Centralized notification management
 - Multi-organization configuration
 - Custom notification rules
-- Team communication settings
 
 ### [user-management/](./user-management/)
 Examples for managing user access and permissions.

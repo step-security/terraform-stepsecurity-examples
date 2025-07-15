@@ -85,7 +85,7 @@ The `users.json` file defines all users and their policies:
 - `email_suffix`: Email domain suffix (for domain-based access with auth_type = "SSO")
 
 #### Policy Fields
-- `type`: Platform type ("github", "gitlab")
+- `type`: Platform type ("github")
 - `role`: User role ("admin", "auditor")
 - `scope`: Permission scope ("customer", "organization", "repository", "group", "project")
 

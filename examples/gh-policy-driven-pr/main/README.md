@@ -201,7 +201,7 @@ selected_repos = ["frontend-*", "backend-*", "mobile-*"]
 - Installs security agent on GitHub-hosted runners
 - Prevents credential exfiltration
 - Monitors the build process
-- Detects compromised dependencies
+- Detects anomalous outbound calls
 
 ### Action SHA Pinning
 - Pins third-party actions to specific SHA commits

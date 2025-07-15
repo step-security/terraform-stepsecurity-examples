@@ -8,7 +8,6 @@ This example demonstrates how to configure GitHub organization notification sett
 - **Multiple Notification Channels**: Configure Slack, Microsoft Teams, and email notifications per organization
 - **Comprehensive Security Events**: Enable notifications for various security detection events
 - **Granular Control**: Fine-tune which events trigger notifications per organization
-- **Policy and Compliance Alerts**: Configure notifications for policy violations and compliance issues
 - **JSON-Driven Configuration**: Easy-to-maintain configuration using JSON files
 - **Production-Ready Configuration**: Real-world configuration ready for deployment
 
@@ -182,21 +181,6 @@ To customize the notification settings:
 }
 ```
 
-## Webhook Setup
-
-### Slack Webhook Setup
-1. Create a new Slack app or use an existing one
-2. Enable "Incoming Webhooks" feature
-3. Create a new webhook for your desired channel
-4. Copy the webhook URL to your configuration
-
-### Microsoft Teams Webhook Setup
-1. Navigate to your Teams channel
-2. Click "More options" (...) → "Connectors"
-3. Find "Incoming Webhook" and click "Configure"
-4. Provide a name and upload an image
-5. Copy the webhook URL to your configuration
-
 ## Security Best Practices
 
 1. **Webhook Security**: 
@@ -264,7 +248,7 @@ terraform import 'stepsecurity_github_org_notification_settings.org_notification
 ## Troubleshooting
 
 - **Webhook Validation**: Test webhook URLs before applying configuration
-- **Organization Access**: Verify StepSecurity has access to your GitHub organization
+- **Organization Access**: Verify StepSecurity app is installed in your GitHub organization
 - **API Permissions**: Ensure API key has sufficient permissions for notification management
 - **Email Delivery**: Check spam filters if email notifications aren't received
 

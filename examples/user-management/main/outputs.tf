@@ -65,20 +65,6 @@ output "users_by_platform" {
         if policy.type == "github"
       ]) > 0
     }
-    gitlab = {
-      for k, v in stepsecurity_user.users : k => {
-        id        = v.id
-        auth_type = v.auth_type
-        policies = [
-          for policy in local.users[k].policies : policy
-          if policy.type == "gitlab"
-        ]
-      }
-      if length([
-        for policy in local.users[k].policies : policy
-        if policy.type == "gitlab"
-      ]) > 0
-    }
   }
 }
 
