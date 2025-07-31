@@ -47,6 +47,17 @@ Examples for creating GitHub suppression rules to manage security findings.
 - Manage file overwrite notifications
 - Organization-wide rule management
 
+### [gh-policy-store/](./gh-policy-store/)
+Examples for creating GitHub policy stores to control egress traffic and security settings.
+
+**Primary Resource:** `stepsecurity_github_policy_store`
+
+**Use Cases:**
+- Control workflow egress traffic (audit/block modes)
+- Define allowed endpoints for external services
+- Manage security settings (telemetry, sudo, file monitoring)
+- Implement organization-wide security policies
+
 ## Example Structure
 
 Each resource directory follows a consistent structure:

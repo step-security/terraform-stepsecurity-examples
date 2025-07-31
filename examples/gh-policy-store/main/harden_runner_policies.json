@@ -1,0 +1,45 @@
+{
+  "policy_stores": [
+    {
+      "owner": "my-organization",
+      "policy_name": "strict-security-policy",
+      "egress_policy": "block",
+      "allowed_endpoints": [
+        "github.com:443",
+        "api.github.com:443",
+        "registry.npmjs.org:443",
+        "registry.yarnpkg.com:443",
+        "pypi.org:443",
+        "files.pythonhosted.org:443"
+      ],
+      "disable_telemetry": false,
+      "disable_sudo": true,
+      "disable_file_monitoring": false
+    },
+    {
+      "owner": "my-organization",
+      "policy_name": "audit-only-policy",
+      "egress_policy": "audit",
+      "allowed_endpoints": [],
+      "disable_telemetry": false,
+      "disable_sudo": false,
+      "disable_file_monitoring": false
+    },
+    {
+      "owner": "dev-organization",
+      "policy_name": "development-policy",
+      "egress_policy": "block",
+      "allowed_endpoints": [
+        "github.com:443",
+        "api.github.com:443",
+        "registry.npmjs.org:443",
+        "*.amazonaws.com:443",
+        "docker.io:443",
+        "registry-1.docker.io:443"
+      ],
+      "disable_telemetry": true,
+      "disable_sudo": false,
+      "disable_file_monitoring": true
+    }
+  ]
+}
