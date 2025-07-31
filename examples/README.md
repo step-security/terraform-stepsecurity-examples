@@ -36,6 +36,17 @@ Examples for managing user access and permissions.
 - Permission management
 - Team member onboarding
 
+### [gh-suppression-rule/](./gh-suppression-rule/)
+Examples for creating GitHub suppression rules to manage security findings.
+
+**Primary Resource:** `stepsecurity_github_supression_rule`
+
+**Use Cases:**
+- Suppress false positive security alerts
+- Ignore legitimate network connections
+- Manage file overwrite notifications
+- Organization-wide rule management
+
 ## Example Structure
 
 Each resource directory follows a consistent structure:

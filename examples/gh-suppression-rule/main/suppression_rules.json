@@ -1,0 +1,38 @@
+{
+  "suppression_rules": [
+    {
+      "name": "ignore-aws-connections",
+      "type": "anomalous_outbound_network_call",
+      "action": "ignore",
+      "description": "Ignore new connections to Amazon AWS services",
+      "owner": "*",
+      "process": "*",
+      "destination": {
+        "domain": "*.amazonaws.com"
+      }
+    },
+    {
+      "name": "ignore-source-overwrite-test-files",
+      "type": "source_code_overwritten",
+      "action": "ignore",
+      "description": "Ignore source code overwritten findings on test files",
+      "owner": "my-org",
+      "repo": "my-repo",
+      "workflow": "ci",
+      "job": "test",
+      "file": "test_file.txt",
+      "file_path": "/tests/test_file.txt"
+    },
+    {
+      "name": "ignore-docker-connections",
+      "type": "anomalous_outbound_network_call",
+      "action": "ignore",
+      "description": "Ignore connections to Docker Hub",
+      "owner": "my-org",
+      "process": "docker*",
+      "destination": {
+        "domain": "*.docker.io"
+      }
+    }
+  ]
+}
