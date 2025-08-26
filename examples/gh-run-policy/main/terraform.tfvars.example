@@ -1,0 +1,10 @@
+# Example terraform.tfvars file for GitHub Run Policy configuration
+# Copy this file to terraform.tfvars and customize for your environment
+
+# Path to the JSON file containing your GitHub run policies configuration
+# The JSON file should follow the structure defined in github_run_policies.json
+policies_json_file = "github_run_policies.json"
+
+# Alternative examples:
+# policies_json_file = "policies/production_run_policies.json"
+# policies_json_file = "configs/development_policies.json"
