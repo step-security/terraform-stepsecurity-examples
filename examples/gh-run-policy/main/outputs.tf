@@ -2,7 +2,7 @@ output "created_policies" {
   description = "Details of all created GitHub run policies"
   value = {
     for key, policy in stepsecurity_github_run_policy.github_run_policies : key => {
-      id           = policy.id
+      policy_id    = policy.policy_id
       owner        = policy.owner
       name         = policy.name
       all_orgs     = policy.all_orgs
@@ -23,7 +23,7 @@ output "policy_summary" {
   description = "Summary of created policies by type and scope"
   value = {
     total_policies = length(stepsecurity_github_run_policy.github_run_policies)
-    
+
     by_scope = {
       all_orgs_policies = length([
         for policy in stepsecurity_github_run_policy.github_run_policies : policy
@@ -38,7 +38,7 @@ output "policy_summary" {
         if policy.repositories != null
       ])
     }
-    
+
     by_type = {
       action_policies = length([
         for policy in stepsecurity_github_run_policy.github_run_policies : policy
@@ -57,7 +57,7 @@ output "policy_summary" {
         if policy.policy_config.enable_compromised_actions_policy == true
       ])
     }
-    
+
     dry_run_policies = length([
       for policy in stepsecurity_github_run_policy.github_run_policies : policy
       if policy.policy_config.is_dry_run == true

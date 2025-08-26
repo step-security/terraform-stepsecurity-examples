@@ -34,26 +34,45 @@ resource "stepsecurity_github_run_policy" "github_run_policies" {
   all_repos    = try(each.value.all_repos, false)
   repositories = try(each.value.repositories, null)
 
-  # Policy configuration
-  policy_config = {
-    owner = each.value.owner
-    name  = each.value.name
+  # Build policy configuration dynamically based on enabled features
+  policy_config = merge(
+    # Base configuration
+    {
+      owner = each.value.owner
+      name  = each.value.name
+    },
 
-    # Action policy settings
-    enable_action_policy = try(each.value.policy_config.enable_action_policy, false)
-    allowed_actions      = try(each.value.policy_config.allowed_actions, {})
+    # Conditionally add action policy fields
+    try(each.value.policy_config.enable_action_policy, false) ? {
+      enable_action_policy = true
+    } : {},
 
-    # Runner policy settings
-    enable_runs_on_policy    = try(each.value.policy_config.enable_runs_on_policy, false)
-    disallowed_runner_labels = try(each.value.policy_config.disallowed_runner_labels, [])
+    try(each.value.policy_config.enable_action_policy, false) && can(each.value.policy_config.allowed_actions) ? {
+      allowed_actions = each.value.policy_config.allowed_actions
+    } : {},
 
-    # Secrets policy settings
-    enable_secrets_policy = try(each.value.policy_config.enable_secrets_policy, false)
+    # Conditionally add runner policy fields
+    try(each.value.policy_config.enable_runs_on_policy, false) ? {
+      enable_runs_on_policy = true
+    } : {},
 
-    # Compromised actions policy settings
-    enable_compromised_actions_policy = try(each.value.policy_config.enable_compromised_actions_policy, false)
+    try(each.value.policy_config.enable_runs_on_policy, false) && can(each.value.policy_config.disallowed_runner_labels) ? {
+      disallowed_runner_labels = each.value.policy_config.disallowed_runner_labels
+    } : {},
 
-    # Dry run mode - for testing policies without enforcement
-    is_dry_run = try(each.value.policy_config.is_dry_run, false)
-  }
+    # Conditionally add secrets policy fields
+    try(each.value.policy_config.enable_secrets_policy, false) ? {
+      enable_secrets_policy = true
+    } : {},
+
+    # Conditionally add compromised actions policy fields
+    try(each.value.policy_config.enable_compromised_actions_policy, false) ? {
+      enable_compromised_actions_policy = true
+    } : {},
+
+    # Conditionally add dry run mode
+    try(each.value.policy_config.is_dry_run, false) ? {
+      is_dry_run = true
+    } : {}
+  )
 }
