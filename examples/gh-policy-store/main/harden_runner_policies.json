@@ -1,5 +1,5 @@
 {
-  "policy_stores": [
+  "harden_runner_policies": [
     {
       "owner": "my-organization",
       "policy_name": "strict-security-policy",
