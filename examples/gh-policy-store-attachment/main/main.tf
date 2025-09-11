@@ -31,12 +31,11 @@ resource "stepsecurity_github_policy_store_attachment" "policy_attachments" {
 
   # Organization and repository configuration
   org = try(each.value.org, null) != null ? {
-    apply_to_org = each.value.org.apply_to_org
+    apply_to_org = try(each.value.org.apply_to_org, null)
     repositories = [
       for repo in try(each.value.org.repositories, []) : {
-        name          = repo.name
-        apply_to_repo = repo.apply_to_repo
-        workflows     = try(repo.workflows, [])
+        name      = repo.name
+        workflows = try(repo.workflows, [])
       }
     ]
   } : null

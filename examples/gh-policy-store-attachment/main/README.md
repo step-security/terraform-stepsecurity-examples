@@ -64,6 +64,15 @@ The `policy_attachments.json` file defines how existing policies are attached to
 - `org`: Organization and repository attachment configuration
 - `clusters`: Array of cluster names for cluster attachments
 
+### Attachment Logic
+
+The attachment logic has been simplified:
+
+- **Repository + workflows specified**: Policy applies only to those specific workflow files
+- **Repository + no workflows**: Policy applies to the entire repository
+- **`apply_to_org: true`**: Policy applies to the entire organization
+- **Clusters specified**: Policy applies to the specified Kubernetes clusters
+
 ### Example JSON Configuration
 
 ```json
@@ -77,12 +86,10 @@ The `policy_attachments.json` file defines how existing policies are attached to
         "repositories": [
           {
             "name": "frontend-app",
-            "apply_to_repo": false,
             "workflows": ["ci.yml", "deploy.yml"]
           },
           {
             "name": "backend-api",
-            "apply_to_repo": false,
             "workflows": ["test.yml"]
           }
         ]
@@ -95,14 +102,10 @@ The `policy_attachments.json` file defines how existing policies are attached to
         "apply_to_org": false,
         "repositories": [
           {
-            "name": "frontend-app",
-            "apply_to_repo": true,
-            "workflows": []
+            "name": "frontend-app"
           },
           {
-            "name": "backend-api",
-            "apply_to_repo": true,
-            "workflows": []
+            "name": "backend-api"
           }
         ]
       }
@@ -159,12 +162,10 @@ Apply policies to specific workflow files within repositories:
     "repositories": [
       {
         "name": "frontend-app",
-        "apply_to_repo": false,
         "workflows": ["ci.yml", "deploy.yml"]
       },
       {
-        "name": "backend-api", 
-        "apply_to_repo": false,
+        "name": "backend-api",
         "workflows": ["test.yml"]
       }
     ]
@@ -189,14 +190,10 @@ Apply policies to entire repositories:
     "apply_to_org": false,
     "repositories": [
       {
-        "name": "frontend-app",
-        "apply_to_repo": true,
-        "workflows": []
+        "name": "frontend-app"
       },
       {
-        "name": "backend-api",
-        "apply_to_repo": true,
-        "workflows": []
+        "name": "backend-api"
       }
     ]
   }
@@ -260,13 +257,10 @@ Combine organization/repository and cluster attachments:
     "apply_to_org": false,
     "repositories": [
       {
-        "name": "critical-repo",
-        "apply_to_repo": true,
-        "workflows": []
+        "name": "critical-repo"
       },
       {
         "name": "staging-repo",
-        "apply_to_repo": false,
         "workflows": ["test.yml", "deploy-staging.yml"]
       }
     ]
@@ -352,12 +346,10 @@ The configuration provides these outputs:
     "repositories": [
       {
         "name": "team-frontend",
-        "apply_to_repo": false,
         "workflows": ["ci.yml", "test.yml"]
       },
       {
-        "name": "team-backend", 
-        "apply_to_repo": false,
+        "name": "team-backend",
         "workflows": ["ci.yml", "test.yml"]
       }
     ]
@@ -375,7 +367,6 @@ The configuration provides these outputs:
     "repositories": [
       {
         "name": "production-app",
-        "apply_to_repo": false,
         "workflows": ["deploy-prod.yml", "release.yml"]
       }
     ]

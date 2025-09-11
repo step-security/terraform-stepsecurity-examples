@@ -8,7 +8,6 @@
         "repositories": [
           {
             "name": "frontend-app",
-            "apply_to_repo": false,
             "workflows": [
               "ci.yml",
               "deploy.yml"
@@ -16,7 +15,6 @@
           },
           {
             "name": "backend-api",
-            "apply_to_repo": false,
             "workflows": [
               "test.yml"
             ]
@@ -31,19 +29,13 @@
         "apply_to_org": false,
         "repositories": [
           {
-            "name": "frontend-app",
-            "apply_to_repo": true,
-            "workflows": []
+            "name": "frontend-app"
           },
           {
-            "name": "backend-api",
-            "apply_to_repo": true,
-            "workflows": []
+            "name": "backend-api"
           },
           {
-            "name": "shared-libs",
-            "apply_to_repo": true,
-            "workflows": []
+            "name": "shared-libs"
           }
         ]
       }
@@ -71,13 +63,10 @@
         "apply_to_org": false,
         "repositories": [
           {
-            "name": "critical-repo",
-            "apply_to_repo": true,
-            "workflows": []
+            "name": "critical-repo"
           },
           {
             "name": "staging-repo",
-            "apply_to_repo": false,
             "workflows": [
               "test.yml",
               "deploy-staging.yml"
