@@ -1,0 +1,82 @@
+{
+  "policy_attachments": [
+    {
+      "owner": "my-organization",
+      "policy_name": "workflow-policy",
+      "org": {
+        "apply_to_org": false,
+        "repositories": [
+          {
+            "name": "frontend-app",
+            "workflows": [
+              "ci.yml",
+              "deploy.yml"
+            ]
+          },
+          {
+            "name": "backend-api",
+            "workflows": [
+              "test.yml"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "owner": "my-organization",
+      "policy_name": "repo-policy",
+      "org": {
+        "apply_to_org": false,
+        "repositories": [
+          {
+            "name": "frontend-app"
+          },
+          {
+            "name": "backend-api"
+          },
+          {
+            "name": "shared-libs"
+          }
+        ]
+      }
+    },
+    {
+      "owner": "my-organization",
+      "policy_name": "org-policy",
+      "org": {
+        "apply_to_org": true,
+        "repositories": []
+      }
+    },
+    {
+      "owner": "dev-organization",
+      "policy_name": "cluster-policy",
+      "clusters": [
+        "production-k8s-cluster",
+        "staging-k8s-cluster"
+      ]
+    },
+    {
+      "owner": "my-organization",
+      "policy_name": "mixed-policy",
+      "org": {
+        "apply_to_org": false,
+        "repositories": [
+          {
+            "name": "critical-repo"
+          },
+          {
+            "name": "staging-repo",
+            "workflows": [
+              "test.yml",
+              "deploy-staging.yml"
+            ]
+          }
+        ]
+      },
+      "clusters": [
+        "dev-k8s-cluster"
+      ]
+    }
+  ]
+}
