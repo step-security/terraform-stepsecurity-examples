@@ -4,16 +4,18 @@ This directory contains comprehensive examples for using the StepSecurity Terraf
 
 ## Available Resource Examples
 
-### [gh-policy-driven-pr/](./gh-policy-driven-pr/)
-Examples for configuring automated security remediation through policy-driven pull requests.
+### [gh-checks/](./gh-checks/)
+Examples for configuring GitHub security checks to enforce security controls across repositories.
 
-**Primary Resource:** `stepsecurity_policy_driven_pr`
+**Primary Resource:** `stepsecurity_github_checks`
 
 **Use Cases:**
-- Automated security PR/issue creation
-- Organization-specific security policies
-- GitHub Actions hardening
-- Security finding remediation
+- Package security controls (NPM cooldown, dependency confusion)
+- Script injection detection
+- License compliance enforcement
+- Vulnerability scanning
+- Repository-specific security policies
+- Development workflow security
 
 ### [gh-org-notification-settings/](./gh-org-notification-settings/)
 Examples for managing GitHub organization notification settings.
@@ -24,6 +26,17 @@ Examples for managing GitHub organization notification settings.
 - Centralized notification management
 - Multi-organization configuration
 - Custom notification rules
+
+### [gh-policy-driven-pr/](./gh-policy-driven-pr/)
+Examples for configuring automated security remediation through policy-driven pull requests.
+
+**Primary Resource:** `stepsecurity_policy_driven_pr`
+
+**Use Cases:**
+- Automated security PR/issue creation
+- Organization-specific security policies
+- GitHub Actions hardening
+- Security finding remediation
 
 ### [user-management/](./user-management/)
 Examples for managing user access and permissions.

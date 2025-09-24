@@ -14,10 +14,25 @@ This repository contains comprehensive examples and reusable modules for the [St
 ```
 terraform-stepsecurity-examples/
 ├── examples/             # Resource-specific examples
-│   ├── gh-policy-driven-pr/        # Policy-driven PR examples
+│   ├── gh-checks/                  # GitHub checks configuration examples
 │   │   ├── main/                   # Basic example
 │   │   └── README.md               # Resource overview
 │   ├── gh-org-notification-settings/  # Notification settings examples
+│   │   ├── main/                   # Basic example
+│   │   └── README.md               # Resource overview
+│   ├── gh-policy-driven-pr/        # Policy-driven PR examples
+│   │   ├── main/                   # Basic example
+│   │   └── README.md               # Resource overview
+│   ├── gh-policy-store/            # GitHub policy store examples
+│   │   ├── main/                   # Basic example
+│   │   └── README.md               # Resource overview
+│   ├── gh-policy-store-attachment/ # Policy store attachment examples
+│   │   ├── main/                   # Basic example
+│   │   └── README.md               # Resource overview
+│   ├── gh-run-policy/              # GitHub run policy examples
+│   │   ├── main/                   # Basic example
+│   │   └── README.md               # Resource overview
+│   ├── gh-suppression-rule/        # GitHub suppression rule examples
 │   │   ├── main/                   # Basic example
 │   │   └── README.md               # Resource overview
 │   ├── user-management/            # User management examples
@@ -33,8 +48,13 @@ terraform-stepsecurity-examples/
 
 | Resource | Description | Primary Use Case |
 |----------|-------------|------------------|
-| [gh-policy-driven-pr](./examples/gh-policy-driven-pr) | Automated security remediation through policy-driven PRs | Auto-remediate security findings with pull requests |
+| [gh-checks](./examples/gh-checks) | GitHub pr checks configuration | Configure security controls for repositories as pr runtime checks|
 | [gh-org-notification-settings](./examples/gh-org-notification-settings) | GitHub organization notification settings | Configure notifications for security findings |
+| [gh-policy-driven-pr](./examples/gh-policy-driven-pr) | Automated security remediation through policy-driven PRs | Auto-remediate security findings with pull requests |
+| [gh-policy-store](./examples/gh-policy-store) | GitHub policy store management for controlling egress traffic | Control workflow egress traffic and security settings |
+| [gh-policy-store-attachment](./examples/gh-policy-store-attachment) | Attach policy stores to GitHub organizations/repositories | Apply policy stores to specific orgs and repos |
+| [gh-run-policy](./examples/gh-run-policy) | GitHub run policy configuration | Manage GitHub Actions workflow policies |
+| [gh-suppression-rule](./examples/gh-suppression-rule) | GitHub suppression rule management | Suppress false positive security alerts |
 | [user-management](./examples/user-management) | User management with role-based access control | Manage user permissions and access |
 
 Each resource directory contains:
