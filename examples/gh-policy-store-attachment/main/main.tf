@@ -30,15 +30,25 @@ resource "stepsecurity_github_policy_store_attachment" "policy_attachments" {
   policy_name = each.value.policy_name
 
   # Organization and repository configuration
-  org = try(each.value.org, null) != null ? {
-    apply_to_org = try(each.value.org.apply_to_org, null)
-    repositories = [
-      for repo in try(each.value.org.repositories, []) : {
-        name      = repo.name
-        workflows = try(repo.workflows, [])
-      }
-    ]
-  } : null
+  org = try(each.value.org, null) != null ? merge(
+    {
+      apply_to_org = try(each.value.org.apply_to_org, null)
+    },
+    # Only include repositories if they exist and are not empty
+    length(try(each.value.org.repositories, [])) > 0 ? {
+      repositories = [
+        for repo in each.value.org.repositories : merge(
+          {
+            name = repo.name
+          },
+          # Only include workflows if they exist and are not empty
+          length(try(repo.workflows, [])) > 0 ? {
+            workflows = repo.workflows
+          } : {}
+        )
+      ]
+    } : {}
+  ) : null
 
   # Cluster configuration
   clusters = try(each.value.clusters, [])
