@@ -7,7 +7,7 @@ This example demonstrates how to create GitHub policy store attachments using th
 This configuration creates policy store attachments that bind existing policies to specific resources. Policy store attachments allow you to:
 
 - **Attach policies to specific workflows**: Apply policies only to designated workflow files
-- **Attach policies to repositories**: Apply policies to entire repositories  
+- **Attach policies to repositories**: Apply policies to entire repositories
 - **Attach policies to organizations**: Apply policies organization-wide
 - **Attach policies to clusters**: Apply policies to Kubernetes clusters
 - **Create mixed attachments**: Combine different attachment types for complex scenarios
@@ -57,10 +57,12 @@ export STEP_SECURITY_CUSTOMER="your-customer-id"
 The `policy_attachments.json` file defines how existing policies are attached to resources. Each attachment must reference:
 
 **Required fields:**
+
 - `owner`: GitHub organization name
 - `policy_name`: Name of existing policy to attach
 
 **Optional fields:**
+
 - `org`: Organization and repository attachment configuration
 - `clusters`: Array of cluster names for cluster attachments
 
@@ -113,10 +115,7 @@ The attachment logic has been simplified:
     {
       "owner": "dev-organization",
       "policy_name": "cluster-policy",
-      "clusters": [
-        "production-k8s-cluster",
-        "staging-k8s-cluster"
-      ]
+      "clusters": ["production-k8s-cluster", "staging-k8s-cluster"]
     }
   ]
 }
@@ -127,11 +126,13 @@ The attachment logic has been simplified:
 1. **Ensure policies exist**: Make sure the referenced policies already exist in your StepSecurity account
 
 2. **Copy the example configuration:**
+
    ```bash
    cp terraform.tfvars.example terraform.tfvars
    ```
 
 3. **Edit `terraform.tfvars`** (optional if using environment variables):
+
    ```hcl
    step_security_api_key  = "your-api-key-here"
    step_security_customer = "your-customer-id"
@@ -158,7 +159,6 @@ Apply policies to specific workflow files within repositories:
   "owner": "my-organization",
   "policy_name": "workflow-policy",
   "org": {
-    "apply_to_org": false,
     "repositories": [
       {
         "name": "frontend-app",
@@ -174,6 +174,7 @@ Apply policies to specific workflow files within repositories:
 ```
 
 **Use cases:**
+
 - Applying stricter policies to production deployment workflows
 - Different security requirements for CI vs deployment workflows
 - Granular control over specific workflow security
@@ -187,7 +188,6 @@ Apply policies to entire repositories:
   "owner": "my-organization",
   "policy_name": "repo-policy",
   "org": {
-    "apply_to_org": false,
     "repositories": [
       {
         "name": "frontend-app"
@@ -201,6 +201,7 @@ Apply policies to entire repositories:
 ```
 
 **Use cases:**
+
 - Team-specific security policies
 - Different requirements for different applications
 - Repository-based security boundaries
@@ -214,13 +215,13 @@ Apply policies to the entire organization:
   "owner": "my-organization",
   "policy_name": "org-policy",
   "org": {
-    "apply_to_org": true,
-    "repositories": []
+    "apply_to_org": true
   }
 }
 ```
 
 **Use cases:**
+
 - Organization-wide baseline security policies
 - Compliance requirements across all repositories
 - Default security posture
@@ -233,14 +234,12 @@ Apply policies to Kubernetes clusters:
 {
   "owner": "dev-organization",
   "policy_name": "cluster-policy",
-  "clusters": [
-    "production-k8s-cluster",
-    "staging-k8s-cluster"
-  ]
+  "clusters": ["production-k8s-cluster", "staging-k8s-cluster"]
 }
 ```
 
 **Use cases:**
+
 - Environment-specific security policies
 - Different requirements for production vs staging clusters
 - Infrastructure-based security boundaries
@@ -254,7 +253,6 @@ Combine organization/repository and cluster attachments:
   "owner": "my-organization",
   "policy_name": "mixed-policy",
   "org": {
-    "apply_to_org": false,
     "repositories": [
       {
         "name": "critical-repo"
@@ -265,13 +263,12 @@ Combine organization/repository and cluster attachments:
       }
     ]
   },
-  "clusters": [
-    "dev-k8s-cluster"
-  ]
+  "clusters": ["dev-k8s-cluster"]
 }
 ```
 
 **Use cases:**
+
 - Complex security architectures
 - Policies that span both GitHub and Kubernetes environments
 - Unified security policies across different infrastructure types
@@ -279,12 +276,14 @@ Combine organization/repository and cluster attachments:
 ## Policy Store vs Policy Store Attachments
 
 ### Policy Store (with `apply_to` fields)
+
 - Policy definition includes attachment information
 - Simpler for basic use cases
 - Policy and attachment are coupled
 - Good for static, simple attachments
 
 ### Policy Store Attachments
+
 - Separate resource for attaching policies
 - More flexible and granular control
 - Reusable policies with different attachments
@@ -296,6 +295,7 @@ Combine organization/repository and cluster attachments:
 If you have existing policy attachments that you want to manage with Terraform, you can import them:
 
 ### Import Command Format
+
 ```bash
 terraform import 'stepsecurity_github_policy_store_attachment.policy_attachments["OWNER-POLICY_NAME"]' 'OWNER:::POLICY_NAME'
 ```
@@ -311,6 +311,7 @@ terraform import 'stepsecurity_github_policy_store_attachment.policy_attachments
 ```
 
 **Important Notes:**
+
 - The import ID format is `OWNER:::POLICY_NAME` (three colons)
 - The resource key in Terraform is `OWNER-POLICY_NAME` (single dash)
 - Policy must exist before creating attachments
@@ -337,6 +338,7 @@ The configuration provides these outputs:
 ## Common Use Cases
 
 ### Development Team Workflows
+
 ```json
 {
   "owner": "my-organization",
@@ -358,6 +360,7 @@ The configuration provides these outputs:
 ```
 
 ### Production Deployment Security
+
 ```json
 {
   "owner": "my-organization",
@@ -375,13 +378,14 @@ The configuration provides these outputs:
 ```
 
 ### Multi-Environment Clusters
+
 ```json
 {
   "owner": "my-organization",
   "policy_name": "multi-env-policy",
   "clusters": [
     "production-cluster-us-east",
-    "production-cluster-eu-west", 
+    "production-cluster-eu-west",
     "staging-cluster-shared"
   ]
 }
@@ -418,6 +422,7 @@ The configuration provides these outputs:
 ## Support
 
 For issues with this example:
+
 1. Ensure all referenced policies exist in your StepSecurity account
 2. Check the JSON configuration syntax
 3. Verify authentication credentials
