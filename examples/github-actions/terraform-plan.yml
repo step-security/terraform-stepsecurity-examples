@@ -1,0 +1,115 @@
+name: "Demo: Terraform Plan"
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "*.tf"
+      - "*.tfvars"
+      - "*.json"
+      - ".github/workflows/*.yml"
+
+env:
+  AWS_REGION: YOUR_AWS_REGION # e.g., us-west-2
+  TERRAFORM_STATE_BUCKET: YOUR_TERRAFORM_STATE_BUCKET # e.g., terraform-state-123456789012-us-west-2
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  terraform-plan:
+    name: "Demo: Plan Changes"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5.0.0
+        with:
+          role-to-assume: arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_GITHUB_ACTIONS_ROLE
+          role-session-name: GitHub-Actions-Terraform
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ~1.7.0
+
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check -recursive
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ env.TERRAFORM_STATE_BUCKET }}" \
+            -backend-config="region=${{ env.AWS_REGION }}" \
+            -backend-config="key=terraform.tfstate"
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false -var-file=terraform.tfvars
+        continue-on-error: true
+        env:
+          TF_VAR_api_key: ${{ secrets.API_KEY }}
+
+      - name: Update Pull Request
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: ${{ steps.plan.outputs.stdout }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `## 🧪 StepSecurity Terraform Demo - Plan Results
+
+            | Step | Status |
+            |------|--------|
+            | Format Check | \`${{ steps.fmt.outcome }}\` |
+            | Initialization | \`${{ steps.init.outcome }}\` |
+            | Validation | \`${{ steps.validate.outcome }}\` |
+            | Plan | \`${{ steps.plan.outcome }}\` |
+
+            <details><summary>📋 Terraform Plan Output</summary>
+
+            \`\`\`terraform
+            ${process.env.PLAN}
+            \`\`\`
+
+            </details>
+
+            > **Demo Repository**: This tests StepSecurity provider integration via GitHub Actions
+            >
+            > **Triggered by**: @${{ github.actor }} • **Event**: \`${{ github.event_name }}\``;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
