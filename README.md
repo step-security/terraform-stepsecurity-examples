@@ -35,6 +35,10 @@ terraform-stepsecurity-examples/
 │   ├── gh-suppression-rule/        # GitHub suppression rule examples
 │   │   ├── main/                   # Basic example
 │   │   └── README.md               # Resource overview
+│   ├── github-actions/             # GitHub Actions workflow examples
+│   │   ├── terraform-plan.yml      # Plan workflow with OIDC
+│   │   ├── terraform-apply.yml     # Apply workflow with OIDC
+│   │   └── README.md               # Setup and configuration guide
 │   ├── user-management/            # User management examples
 │   │   ├── main/                   # Basic example
 │   │   └── README.md               # Resource overview
@@ -55,6 +59,7 @@ terraform-stepsecurity-examples/
 | [gh-policy-store-attachment](./examples/gh-policy-store-attachment) | Attach policy stores to GitHub organizations/repositories | Apply policy stores to specific orgs and repos |
 | [gh-run-policy](./examples/gh-run-policy) | GitHub run policy configuration | Manage GitHub Actions workflow policies |
 | [gh-suppression-rule](./examples/gh-suppression-rule) | GitHub suppression rule management | Suppress false positive security alerts |
+| [github-actions](./examples/github-actions) | GitHub Actions workflow examples with OIDC and S3 backend | Integrate Terraform with GitHub Actions using secure authentication |
 | [user-management](./examples/user-management) | User management with role-based access control | Manage user permissions and access |
 
 Each resource directory contains:
