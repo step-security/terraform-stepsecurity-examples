@@ -5,16 +5,21 @@ This directory contains examples demonstrating how to use the `stepsecurity_poli
 ## Available Examples
 
 ### [main/](./main/)
-Basic example showing how to configure policy-driven PR settings for a single GitHub organization with standard security features.
+Comprehensive example showing how to configure policy-driven PR settings for a single GitHub organization with v2 security features.
 
 **Features:**
 - Single organization configuration
 - Direct Terraform resource definition
-- Basic security hardening options
+- Standard security hardening options (runner hardening, action pinning, token restrictions)
+- Advanced v2 features:
+  - Dockerfile security scanning
+  - Pre-commit hook management
+  - Automated dependency updates (npm, pip, docker, etc.)
+  - Workflow template integration
 - Repository selection examples
 - Comprehensive documentation
 
-**Best for:** Getting started with StepSecurity policy-driven PRs, simple setups, single organization deployments.
+**Best for:** Getting started with StepSecurity policy-driven PRs, production deployments with comprehensive security coverage, organizations wanting automated security remediation.
 
 ## Future Examples
 

@@ -3,7 +3,7 @@ terraform {
   required_providers {
     stepsecurity = {
       source  = "step-security/stepsecurity"
-      version = "~> 0.0.4"
+      version = "~> 0.0.9"
     }
   }
 }
@@ -28,7 +28,7 @@ resource "stepsecurity_github_policy_store" "harden_runner_policies" {
 
   owner       = each.value.owner
   policy_name = each.value.policy_name
-  
+
   # Required egress policy setting
   egress_policy = each.value.egress_policy
 
