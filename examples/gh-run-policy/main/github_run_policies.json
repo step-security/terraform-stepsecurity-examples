@@ -2,28 +2,12 @@
   "github_run_policies": [
     {
       "owner": "my-org",
-      "name": "Development Actions Policy",
-      "all_repos": true,
-      "policy_config": {
-        "enable_action_policy": true,
-        "allowed_actions": {
-          "actions/checkout": "allow",
-          "actions/setup-node": "allow",
-          "actions/setup-python": "allow",
-          "actions/cache": "allow",
-          "actions/upload-artifact": "allow",
-          "actions/download-artifact": "allow",
-          "step-security/harden-runner": "allow",
-          "github/codeql-action/init": "allow",
-          "github/codeql-action/analyze": "allow"
-        },
-        "is_dry_run": true
-      }
-    },
-    {
-      "owner": "my-org",
-      "name": "Production Actions Policy",
-      "repositories": ["critical-app", "payment-service", "user-auth"],
+      "name": "Allowed Actions Policy",
+      "repositories": [
+        "critical-app",
+        "payment-service",
+        "user-auth"
+      ],
       "policy_config": {
         "enable_action_policy": true,
         "allowed_actions": {
@@ -54,6 +38,11 @@
       "all_orgs": true,
       "policy_config": {
         "enable_secrets_policy": true,
+        "exempted_users": [
+          "dependabot[bot]",
+          "renovate[bot]",
+          "github-actions[bot]"
+        ],
         "is_dry_run": false
       }
     },
@@ -64,49 +53,6 @@
       "policy_config": {
         "enable_compromised_actions_policy": true,
         "is_dry_run": false
-      }
-    },
-    {
-      "owner": "my-org",
-      "name": "Critical Repositories Policy",
-      "repositories": ["payment-service", "user-auth"],
-      "policy_config": {
-        "enable_action_policy": true,
-        "enable_runs_on_policy": true,
-        "enable_secrets_policy": true,
-        "enable_compromised_actions_policy": true,
-        "allowed_actions": {
-          "actions/checkout": "allow",
-          "step-security/harden-runner": "allow"
-        },
-        "disallowed_runner_labels": [
-          "self-hosted",
-          "windows-latest",
-          "macos-latest"
-        ],
-        "is_dry_run": false
-      }
-    },
-    {
-      "owner": "test-org",
-      "name": "Test Environment Policy",
-      "all_repos": true,
-      "policy_config": {
-        "enable_action_policy": true,
-        "enable_runs_on_policy": true,
-        "allowed_actions": {
-          "actions/checkout": "allow",
-          "actions/setup-node": "allow",
-          "actions/setup-python": "allow",
-          "actions/cache": "allow",
-          "step-security/harden-runner": "allow",
-          "github/codeql-action/init": "allow",
-          "github/codeql-action/analyze": "allow"
-        },
-        "disallowed_runner_labels": [
-          "self-hosted"
-        ],
-        "is_dry_run": true
       }
     }
   ]

@@ -70,6 +70,11 @@ resource "stepsecurity_github_run_policy" "github_run_policies" {
       enable_compromised_actions_policy = true
     } : {},
 
+    # Conditionally add exempted users for secrets policy
+    try(each.value.policy_config.enable_secrets_policy, false) && can(each.value.policy_config.exempted_users) ? {
+      exempted_users = each.value.policy_config.exempted_users
+    } : {},
+
     # Conditionally add dry run mode
     try(each.value.policy_config.is_dry_run, false) ? {
       is_dry_run = true

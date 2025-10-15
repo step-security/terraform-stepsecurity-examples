@@ -6,10 +6,11 @@ This example demonstrates how to create and manage multiple GitHub run policies 
 
 - **Action Policies**: Control which GitHub Actions can be used in workflows
 - **Runner Policies**: Restrict runner types and labels
-- **Secrets Policies**: Prevent secrets exfiltration
+- **Secrets Policies**: Prevent secrets exfiltration with configurable user exemptions
 - **Compromised Actions Policies**: Block known malicious actions
 - **Multi-scope Support**: Apply policies to all orgs, all repos, or specific repositories
 - **Dry Run Mode**: Test policies without enforcement
+- **User Exemptions**: Exempt specific users/bots from secrets policy checks
 - **JSON-driven Configuration**: Easy to maintain and version control
 
 ## Quick Start
@@ -105,9 +106,16 @@ Choose one of these scope options for each policy:
 #### Secrets Policies
 ```json
 {
-  "enable_secrets_policy": true
+  "enable_secrets_policy": true,
+  "exempted_users": [
+    "dependabot[bot]",
+    "renovate[bot]",
+    "github-actions[bot]"
+  ]
 }
 ```
+
+The `exempted_users` field allows you to specify users or bots that should be exempt from secrets exfiltration detection. This is useful for automated tools that may trigger false positives.
 
 #### Compromised Actions Policies
 ```json
@@ -127,13 +135,19 @@ Choose one of these scope options for each policy:
 
 The default configuration includes several example policies:
 
-1. **Development Actions Policy**: Broad set of allowed actions for development, dry run mode
-2. **Production Actions Policy**: Strict actions for critical repositories
-3. **Secure Runners Policy**: Blocks potentially insecure runner types
-4. **Secrets Protection Policy**: Organization-wide secrets protection
-5. **Compromised Actions Protection**: Blocks known malicious actions
-6. **Critical Repositories Policy**: Combined policy for most sensitive repositories
-7. **Test Environment Policy**: Relaxed policy for testing with dry run mode
+1. **Allowed Actions Policy**: Strict actions for specific critical repositories
+2. **Secure Runners Policy**: Blocks potentially insecure runner types
+3. **Secrets Protection Policy**: Organization-wide secrets protection with bot exemptions
+4. **Compromised Actions Protection**: Blocks known malicious actions
+
+### User Exemptions in Secrets Policy
+
+The **Secrets Protection Policy** includes exemptions for common automation bots:
+- `dependabot[bot]` - For automated dependency updates
+- `renovate[bot]` - For Renovate dependency management
+- `github-actions[bot]` - For GitHub Actions automation
+
+These exemptions prevent false positives while maintaining security for human users and unknown automation.
 
 ## Common Use Cases
 
@@ -168,6 +182,10 @@ The default configuration includes several example policies:
       "actions/checkout": "allow",
       "step-security/harden-runner": "allow"
     },
+    "exempted_users": [
+      "dependabot[bot]",
+      "github-actions[bot]"
+    ],
     "is_dry_run": false
   }
 }
@@ -182,6 +200,11 @@ The default configuration includes several example policies:
   "policy_config": {
     "enable_compromised_actions_policy": true,
     "enable_secrets_policy": true,
+    "exempted_users": [
+      "dependabot[bot]",
+      "renovate[bot]",
+      "github-actions[bot]"
+    ],
     "is_dry_run": false
   }
 }

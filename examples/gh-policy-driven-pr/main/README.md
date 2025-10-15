@@ -29,8 +29,17 @@ This example demonstrates how to manage StepSecurity policy-driven PR configurat
    ```hcl
    # Edit main.tf and update:
    # - "organization-name" with your GitHub organization name
-   # - Repository names for your organization
-   # - Security settings as needed
+   # - Repository names in both resources
+   # - Security settings as needed for each policy level
+
+   # The file demonstrates using both resources simultaneously:
+   # 1. Organization-wide policy with exclusions (baseline security)
+   # 2. Specific policy for an excluded repo (enhanced security)
+
+   # You can customize this pattern to fit your needs:
+   # - Remove the second resource to only use org-wide policy
+   # - Remove the first resource to only use specific repo policies
+   # - Keep both to implement graduated security levels
    ```
 
 3. **Initialize and apply Terraform:**
@@ -42,26 +51,81 @@ This example demonstrates how to manage StepSecurity policy-driven PR configurat
 
 ## Configuration Example
 
-This example configures policy-driven PR settings for a single GitHub organization:
+This example demonstrates a powerful pattern: **combining organization-wide policy with specific repository overrides**.
 
-### Terraform Configuration (main.tf)
+The `main.tf` file shows both resources working together:
+1. **Organization-wide policy** with exclusions - Applies baseline security to all repos except specified ones
+2. **Specific repository policy** - Applies different settings to an excluded repo
+
+This pattern allows you to:
+- Set organization-wide defaults with `selected_repos = ["*"]`
+- Exclude specific repos that need different treatment with `excluded_repos`
+- Apply custom policies to those excluded repos with a separate resource
+
+### Combined Configuration (main.tf)
+
+#### Organization-Wide Policy with Exclusions
 ```hcl
+# Apply baseline policy to all repositories except specific ones
+resource "stepsecurity_policy_driven_pr" "org_level_with_exclusions" {
+  owner          = "organization-name"
+  selected_repos = ["*"]
+  excluded_repos = ["archived-repo", "test-repo-old"] # These repos opt-out
+
+  auto_remediation_options = {
+    create_pr                             = true
+    create_issue                          = false
+    create_github_advanced_security_alert = false
+    harden_github_hosted_runner           = true
+    pin_actions_to_sha                    = true
+    restrict_github_token_permissions     = false
+    secure_docker_file                    = false
+  }
+}
+```
+
+#### Specific Policy for Excluded Repository
+```hcl
+# Apply enhanced policy with v2 features to a specific excluded repo
 resource "stepsecurity_policy_driven_pr" "example" {
   owner          = "organization-name"
-  selected_repos = ["repo1", "repo2", "repo3"]
+  selected_repos = ["test-repo-old"] # One of the excluded repos from above
 
   auto_remediation_options = {
     create_pr                                     = true
     create_issue                                  = false
-    create_github_advanced_security_alert        = false
-    harden_github_hosted_runner                  = true
-    pin_actions_to_sha                           = true
-    restrict_github_token_permissions            = true
-    actions_to_exempt_while_pinning              = ["actions/checkout", "actions/setup-node"]
-    actions_to_replace_with_step_security_actions = []
+    create_github_advanced_security_alert         = false
+    harden_github_hosted_runner                   = true
+    pin_actions_to_sha                            = true
+    restrict_github_token_permissions             = true
+    secure_docker_file                            = true
+    actions_to_exempt_while_pinning               = ["actions/checkout", "actions/setup-node"]
+    actions_to_replace_with_step_security_actions = ["EnricoMi/publish-unit-test-result-action"]
+    update_precommit_file                         = [".pre-commit-config.yaml"]
+    package_ecosystem = [
+      {
+        package  = "npm"
+        interval = "daily"
+      },
+      {
+        package  = "pip"
+        interval = "weekly"
+      }
+    ]
+    add_workflows = "https://github.com/my-org/workflow-templates"
   }
 }
 ```
+
+**How this works:**
+1. `org_level_with_exclusions` applies a baseline policy to all repos except "archived-repo" and "test-repo-old"
+2. `example` applies an enhanced policy with v2 features specifically to "test-repo-old"
+3. "archived-repo" remains excluded with no policy applied
+
+This pattern is useful for:
+- **Staged rollouts**: Apply basic security org-wide, then enable advanced features for specific repos
+- **Different team requirements**: Some repos need more/less strict policies
+- **Legacy repositories**: Exclude old repos from org policy while maintaining custom configs
 
 ## Configuration Fields
 
@@ -69,6 +133,9 @@ resource "stepsecurity_policy_driven_pr" "example" {
 - `owner`: GitHub organization/owner name
 - `selected_repos`: Array of repository names or ["*"] for all repositories
 - `auto_remediation_options`: Object containing remediation settings
+
+### Optional Fields
+- `excluded_repos`: Array of repository names to exclude when `selected_repos` is ["*"]. This allows you to opt-out specific repos from org-wide policies.
 
 ### Auto Remediation Options
 
@@ -83,10 +150,17 @@ resource "stepsecurity_policy_driven_pr" "example" {
 - `harden_github_hosted_runner`: Install security agent on GitHub-hosted runners
 - `pin_actions_to_sha`: Pin GitHub Actions to specific SHA commits
 - `restrict_github_token_permissions`: Restrict GitHub token permissions
+- `secure_docker_file`: Enable Dockerfile security scanning and hardening
 
 #### Action Management
 - `actions_to_exempt_while_pinning`: Array of actions to exclude from SHA pinning
 - `actions_to_replace_with_step_security_actions`: Array of actions to replace with StepSecurity alternatives
+
+#### Advanced Features (v2)
+- `update_precommit_file`: Array of pre-commit config files to update with security hooks
+- `package_ecosystem`: Array of dependency update configurations for automated dependency updates
+  - Each entry includes `package` (npm, pip, etc.) and `interval` (daily, weekly, monthly)
+- `add_workflows`: URL to GitHub repository containing workflow templates to add to repositories
 
 ## Configuration Examples
 
@@ -109,21 +183,53 @@ resource "stepsecurity_policy_driven_pr" "basic" {
 }
 ```
 
-### Comprehensive Security Policy
+### Comprehensive Security Policy with v2 Features
 ```hcl
 resource "stepsecurity_policy_driven_pr" "comprehensive" {
   owner          = "security-focused-org"
   selected_repos = ["*"]
-  
+
   auto_remediation_options = {
     create_pr                                     = false
     create_issue                                  = true
-    create_github_advanced_security_alert        = true
-    harden_github_hosted_runner                  = true
-    pin_actions_to_sha                           = true
-    restrict_github_token_permissions            = true
-    actions_to_exempt_while_pinning              = ["actions/checkout", "actions/setup-node"]
+    create_github_advanced_security_alert         = true
+    harden_github_hosted_runner                   = true
+    pin_actions_to_sha                            = true
+    restrict_github_token_permissions             = true
+    secure_docker_file                            = true
+    actions_to_exempt_while_pinning               = ["actions/checkout", "actions/setup-node"]
     actions_to_replace_with_step_security_actions = ["EnricoMi/publish-unit-test-result-action", "dorny/test-reporter"]
+    update_precommit_file                         = [".pre-commit-config.yaml"]
+    package_ecosystem = [
+      {
+        package  = "npm"
+        interval = "daily"
+      },
+      {
+        package  = "pip"
+        interval = "weekly"
+      }
+    ]
+    add_workflows = "https://github.com/my-org/workflow-templates"
+  }
+}
+```
+
+### Organization-Wide Policy with Exclusions
+```hcl
+resource "stepsecurity_policy_driven_pr" "org_level_with_exclusions" {
+  owner          = "test-organization"
+  selected_repos = ["*"]
+  excluded_repos = ["archived-repo", "test-repo-old"] # These repos opt-out
+
+  auto_remediation_options = {
+    create_pr                             = true
+    create_issue                          = false
+    create_github_advanced_security_alert = false
+    harden_github_hosted_runner           = true
+    pin_actions_to_sha                    = true
+    restrict_github_token_permissions     = false
+    secure_docker_file                    = false
   }
 }
 ```
@@ -133,7 +239,7 @@ resource "stepsecurity_policy_driven_pr" "comprehensive" {
 resource "stepsecurity_policy_driven_pr" "development" {
   owner          = "dev-org"
   selected_repos = ["dev-*", "test-*"]
-  
+
   auto_remediation_options = {
     create_pr                                     = false
     create_issue                                  = true
@@ -190,6 +296,31 @@ selected_repos = ["repo1", "repo2", "repo3"]
 selected_repos = ["*"]
 ```
 
+### All Repositories with Exclusions
+Apply policy to all repositories except specific ones:
+```hcl
+selected_repos = ["*"]
+excluded_repos = ["archived-repo", "legacy-app", "test-sandbox"]
+```
+
+**How it works:**
+- When `selected_repos = ["*"]`, the policy applies to all current and future repositories in the organization
+- `excluded_repos` allows you to opt-out specific repositories from this org-wide policy
+- Excluded repos can then:
+  - Have their own specific policy defined in a separate resource (see main.tf example)
+  - Retain their existing policy configuration (if they had one before)
+  - Have no policy applied (if you want to exclude them completely)
+- This is useful for:
+  - **Graduated security**: Apply baseline security org-wide, enhanced security to specific repos
+  - **Team-specific policies**: Different repos managed by different teams with separate requirements
+  - **Archived repositories**: Exclude repos that should not receive automated PRs
+  - **Legacy repositories**: Exclude old repos from org policy while maintaining custom configs
+  - **Test/sandbox repositories**: Exclude experimental repos from production policies
+
+**Important:** `excluded_repos` can only be used when `selected_repos = ["*"]`. Using it with specific repo names will result in a validation error.
+
+**Tip:** You can define multiple resources - one with org-wide config and exclusions, and others with specific policies for excluded repos. This allows you to implement sophisticated security patterns as shown in the main.tf example.
+
 ### Pattern Matching
 ```hcl
 selected_repos = ["frontend-*", "backend-*", "mobile-*"]
@@ -215,6 +346,37 @@ selected_repos = ["frontend-*", "backend-*", "mobile-*"]
 - Follows principle of least privilege
 - Improves overall security posture
 
+### Dockerfile Security
+- Scans Dockerfiles for security vulnerabilities
+- Suggests security best practices for container images
+- Identifies outdated base images and dependencies
+- Helps maintain secure containerized applications
+
+## Advanced v2 Features
+
+### Pre-commit Hook Management
+Automatically updates pre-commit configuration files with security hooks:
+- Adds StepSecurity recommended pre-commit hooks
+- Ensures security checks run before commits
+- Maintains existing pre-commit configuration
+- Supports custom pre-commit config file paths
+
+### Automated Dependency Updates
+Configure automated dependency update PRs for different package ecosystems:
+- **npm**: JavaScript/Node.js dependencies
+- **pip**: Python dependencies
+- **docker**: Container base images
+- **go**: Go modules
+- Customizable update intervals (daily, weekly, monthly)
+- Keeps dependencies up-to-date with security patches
+
+### Workflow Template Integration
+Add organization-standard workflows to repositories:
+- Deploy CI/CD workflows from a central repository
+- Ensure consistent security practices across all repos
+- Automatically add workflows like security scanning, testing, etc.
+- Supports custom workflow template repositories
+
 ## Action Management
 
 ### Exempting Actions from Pinning
@@ -232,6 +394,34 @@ actions_to_replace_with_step_security_actions = [
   "EnricoMi/publish-unit-test-result-action",
   "dorny/test-reporter"
 ]
+```
+
+### Configuring Pre-commit Hooks
+```hcl
+update_precommit_file = [".pre-commit-config.yaml", ".pre-commit-config.yml"]
+```
+
+### Dependency Update Configuration
+```hcl
+package_ecosystem = [
+  {
+    package  = "npm"
+    interval = "daily"
+  },
+  {
+    package  = "pip"
+    interval = "weekly"
+  },
+  {
+    package  = "docker"
+    interval = "weekly"
+  }
+]
+```
+
+### Adding Workflow Templates
+```hcl
+add_workflows = "https://github.com/my-org/workflow-templates"
 ```
 
 ## Security Best Practices
@@ -275,6 +465,7 @@ When configuring auto-remediation options, be aware of these provider validation
 1. **Mutual Exclusivity**: `create_pr` and `create_issue` cannot both be `true`
 2. **Dependency Rule**: `create_github_advanced_security_alert` can only be `true` if `create_issue` is `true`
 3. **Repository Requirement**: `selected_repos` must contain at least one repository
+4. **Exclusion Rule**: `excluded_repos` can only be used when `selected_repos = ["*"]` (wildcard for all repos)
 
 These rules ensure proper configuration and prevent conflicting remediation approaches.
 

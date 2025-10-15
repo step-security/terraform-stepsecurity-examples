@@ -10,8 +10,9 @@ Comprehensive example showing how to configure multiple GitHub run policies usin
 **Features:**
 - Support for action policies (allowed/disallowed actions)
 - Runner label policies (allowed/disallowed runner types)
-- Secrets policies (prevent secrets exfiltration)
+- Secrets policies (prevent secrets exfiltration) with user exemptions
 - Compromised actions policies (block known malicious actions)
+- User exemption support for automated tools (dependabot, renovate, etc.)
 - JSON-driven configuration for easy management
 - Multi-organization and repository-specific policies
 - Dry run mode for testing policies
@@ -117,7 +118,7 @@ jobs:
 ```
 
 #### Secrets Policies
-Prevent secrets exfiltration and enforce secure handling.
+Prevent secrets exfiltration and enforce secure handling. Supports user exemptions to allow specific users or bots (like dependabot, renovate) to bypass secrets checks, preventing false positives from automated tools.
 
 #### Compromised Actions Policies
 Automatically block actions that have been identified as compromised or malicious.
