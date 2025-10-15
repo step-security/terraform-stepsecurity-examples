@@ -3,7 +3,7 @@ terraform {
   required_providers {
     stepsecurity = {
       source  = "step-security/stepsecurity"
-      version = "~> 0.0.4"
+      version = "~> 0.0.9"
     }
   }
 }
@@ -48,7 +48,7 @@ resource "stepsecurity_policy_driven_pr" "example" {
     secure_docker_file                            = true
     actions_to_exempt_while_pinning               = ["actions/checkout", "actions/setup-node"]
     actions_to_replace_with_step_security_actions = ["EnricoMi/publish-unit-test-result-action"]
-    update_precommit_file                         = [".pre-commit-config.yaml"]
+    update_precommit_file                         = ["eslint"]
     package_ecosystem = [
       {
         package  = "npm"

@@ -3,7 +3,7 @@ terraform {
   required_providers {
     stepsecurity = {
       source  = "step-security/stepsecurity"
-      version = "~> 0.0.4"
+      version = "~> 0.0.9"
     }
   }
 }
@@ -28,7 +28,7 @@ resource "stepsecurity_github_checks" "security_org" {
       enable  = true
       type    = "required"
       settings = {
-        cool_down_period                      = 7
+        cool_down_period                     = 7
         packages_to_exempt_in_cooldown_check = []
       }
     },
@@ -50,7 +50,7 @@ resource "stepsecurity_github_checks" "security_org" {
   }
 
   baseline_check = {
-    repos      = ["*"]
+    repos = ["*"]
   }
 }
 
@@ -64,7 +64,7 @@ resource "stepsecurity_github_checks" "development_org" {
       enable  = true
       type    = "required"
       settings = {
-        cool_down_period                      = 3
+        cool_down_period                     = 3
         packages_to_exempt_in_cooldown_check = ["test-package/*", "@dev-tools/*"]
       }
     },

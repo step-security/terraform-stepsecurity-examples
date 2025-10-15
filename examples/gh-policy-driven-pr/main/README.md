@@ -20,12 +20,14 @@ This example demonstrates how to manage StepSecurity policy-driven PR configurat
 ## Usage
 
 1. **Set up environment variables (recommended):**
+
    ```bash
    export STEP_SECURITY_API_KEY="your-api-key-here"
    export STEP_SECURITY_CUSTOMER="your-customer"
    ```
 
 2. **Update the configuration in main.tf:**
+
    ```hcl
    # Edit main.tf and update:
    # - "organization-name" with your GitHub organization name
@@ -54,10 +56,12 @@ This example demonstrates how to manage StepSecurity policy-driven PR configurat
 This example demonstrates a powerful pattern: **combining organization-wide policy with specific repository overrides**.
 
 The `main.tf` file shows both resources working together:
+
 1. **Organization-wide policy** with exclusions - Applies baseline security to all repos except specified ones
 2. **Specific repository policy** - Applies different settings to an excluded repo
 
 This pattern allows you to:
+
 - Set organization-wide defaults with `selected_repos = ["*"]`
 - Exclude specific repos that need different treatment with `excluded_repos`
 - Apply custom policies to those excluded repos with a separate resource
@@ -65,6 +69,7 @@ This pattern allows you to:
 ### Combined Configuration (main.tf)
 
 #### Organization-Wide Policy with Exclusions
+
 ```hcl
 # Apply baseline policy to all repositories except specific ones
 resource "stepsecurity_policy_driven_pr" "org_level_with_exclusions" {
@@ -85,6 +90,7 @@ resource "stepsecurity_policy_driven_pr" "org_level_with_exclusions" {
 ```
 
 #### Specific Policy for Excluded Repository
+
 ```hcl
 # Apply enhanced policy with v2 features to a specific excluded repo
 resource "stepsecurity_policy_driven_pr" "example" {
@@ -101,7 +107,7 @@ resource "stepsecurity_policy_driven_pr" "example" {
     secure_docker_file                            = true
     actions_to_exempt_while_pinning               = ["actions/checkout", "actions/setup-node"]
     actions_to_replace_with_step_security_actions = ["EnricoMi/publish-unit-test-result-action"]
-    update_precommit_file                         = [".pre-commit-config.yaml"]
+    update_precommit_file                         = ["eslint"]
     package_ecosystem = [
       {
         package  = "npm"
@@ -118,11 +124,13 @@ resource "stepsecurity_policy_driven_pr" "example" {
 ```
 
 **How this works:**
+
 1. `org_level_with_exclusions` applies a baseline policy to all repos except "archived-repo" and "test-repo-old"
 2. `example` applies an enhanced policy with v2 features specifically to "test-repo-old"
 3. "archived-repo" remains excluded with no policy applied
 
 This pattern is useful for:
+
 - **Staged rollouts**: Apply basic security org-wide, then enable advanced features for specific repos
 - **Different team requirements**: Some repos need more/less strict policies
 - **Legacy repositories**: Exclude old repos from org policy while maintaining custom configs
@@ -130,33 +138,39 @@ This pattern is useful for:
 ## Configuration Fields
 
 ### Required Fields
+
 - `owner`: GitHub organization/owner name
 - `selected_repos`: Array of repository names or ["*"] for all repositories
 - `auto_remediation_options`: Object containing remediation settings
 
 ### Optional Fields
+
 - `excluded_repos`: Array of repository names to exclude when `selected_repos` is ["*"]. This allows you to opt-out specific repos from org-wide policies.
 
 ### Auto Remediation Options
 
 #### Notification Settings
+
 - `create_pr`: Create a pull request when findings are detected
-- `create_issue`: Create an issue when findings are detected  
+- `create_issue`: Create an issue when findings are detected
 - `create_github_advanced_security_alert`: Create GitHub Advanced Security alerts
 
 **Important**: `create_pr` and `create_issue` cannot both be `true`. Also, `create_github_advanced_security_alert` can only be `true` if `create_issue` is `true`.
 
 #### Security Hardening Features
+
 - `harden_github_hosted_runner`: Install security agent on GitHub-hosted runners
 - `pin_actions_to_sha`: Pin GitHub Actions to specific SHA commits
 - `restrict_github_token_permissions`: Restrict GitHub token permissions
 - `secure_docker_file`: Enable Dockerfile security scanning and hardening
 
 #### Action Management
+
 - `actions_to_exempt_while_pinning`: Array of actions to exclude from SHA pinning
 - `actions_to_replace_with_step_security_actions`: Array of actions to replace with StepSecurity alternatives
 
 #### Advanced Features (v2)
+
 - `update_precommit_file`: Array of pre-commit config files to update with security hooks
 - `package_ecosystem`: Array of dependency update configurations for automated dependency updates
   - Each entry includes `package` (npm, pip, etc.) and `interval` (daily, weekly, monthly)
@@ -165,11 +179,12 @@ This pattern is useful for:
 ## Configuration Examples
 
 ### Basic Security Policy
+
 ```hcl
 resource "stepsecurity_policy_driven_pr" "basic" {
   owner          = "my-org"
   selected_repos = ["app1", "app2"]
-  
+
   auto_remediation_options = {
     create_pr                                     = true
     create_issue                                  = false
@@ -184,6 +199,7 @@ resource "stepsecurity_policy_driven_pr" "basic" {
 ```
 
 ### Comprehensive Security Policy with v2 Features
+
 ```hcl
 resource "stepsecurity_policy_driven_pr" "comprehensive" {
   owner          = "security-focused-org"
@@ -199,7 +215,7 @@ resource "stepsecurity_policy_driven_pr" "comprehensive" {
     secure_docker_file                            = true
     actions_to_exempt_while_pinning               = ["actions/checkout", "actions/setup-node"]
     actions_to_replace_with_step_security_actions = ["EnricoMi/publish-unit-test-result-action", "dorny/test-reporter"]
-    update_precommit_file                         = [".pre-commit-config.yaml"]
+    update_precommit_file                         = ["eslint"]
     package_ecosystem = [
       {
         package  = "npm"
@@ -216,6 +232,7 @@ resource "stepsecurity_policy_driven_pr" "comprehensive" {
 ```
 
 ### Organization-Wide Policy with Exclusions
+
 ```hcl
 resource "stepsecurity_policy_driven_pr" "org_level_with_exclusions" {
   owner          = "test-organization"
@@ -235,6 +252,7 @@ resource "stepsecurity_policy_driven_pr" "org_level_with_exclusions" {
 ```
 
 ### Development Environment Policy
+
 ```hcl
 resource "stepsecurity_policy_driven_pr" "development" {
   owner          = "dev-org"
@@ -256,6 +274,7 @@ resource "stepsecurity_policy_driven_pr" "development" {
 ## Terraform Variables
 
 ### Optional Variables
+
 ```hcl
 # variables.tf
 variable "step_security_api_key" {
@@ -287,23 +306,28 @@ The configuration provides comprehensive outputs:
 ## Repository Selection
 
 ### Specific Repositories
+
 ```hcl
 selected_repos = ["repo1", "repo2", "repo3"]
 ```
 
 ### All Repositories
+
 ```hcl
 selected_repos = ["*"]
 ```
 
 ### All Repositories with Exclusions
+
 Apply policy to all repositories except specific ones:
+
 ```hcl
 selected_repos = ["*"]
 excluded_repos = ["archived-repo", "legacy-app", "test-sandbox"]
 ```
 
 **How it works:**
+
 - When `selected_repos = ["*"]`, the policy applies to all current and future repositories in the organization
 - `excluded_repos` allows you to opt-out specific repositories from this org-wide policy
 - Excluded repos can then:
@@ -322,6 +346,7 @@ excluded_repos = ["archived-repo", "legacy-app", "test-sandbox"]
 **Tip:** You can define multiple resources - one with org-wide config and exclusions, and others with specific policies for excluded repos. This allows you to implement sophisticated security patterns as shown in the main.tf example.
 
 ### Pattern Matching
+
 ```hcl
 selected_repos = ["frontend-*", "backend-*", "mobile-*"]
 ```
@@ -329,24 +354,28 @@ selected_repos = ["frontend-*", "backend-*", "mobile-*"]
 ## Security Features Explained
 
 ### GitHub Hosted Runner Hardening
+
 - Installs security agent on GitHub-hosted runners
 - Prevents credential exfiltration
 - Monitors the build process
 - Detects anomalous outbound calls
 
 ### Action SHA Pinning
+
 - Pins third-party actions to specific SHA commits
 - Prevents supply chain attacks
 - Follows GitHub security hardening guidelines
 - Allows exemptions for trusted actions
 
 ### Token Permission Restriction
+
 - Restricts GitHub token permissions to minimum required
 - Reduces blast radius of potential security issues
 - Follows principle of least privilege
 - Improves overall security posture
 
 ### Dockerfile Security
+
 - Scans Dockerfiles for security vulnerabilities
 - Suggests security best practices for container images
 - Identifies outdated base images and dependencies
@@ -355,14 +384,18 @@ selected_repos = ["frontend-*", "backend-*", "mobile-*"]
 ## Advanced v2 Features
 
 ### Pre-commit Hook Management
+
 Automatically updates pre-commit configuration files with security hooks:
+
 - Adds StepSecurity recommended pre-commit hooks
 - Ensures security checks run before commits
 - Maintains existing pre-commit configuration
 - Supports custom pre-commit config file paths
 
 ### Automated Dependency Updates
+
 Configure automated dependency update PRs for different package ecosystems:
+
 - **npm**: JavaScript/Node.js dependencies
 - **pip**: Python dependencies
 - **docker**: Container base images
@@ -371,7 +404,9 @@ Configure automated dependency update PRs for different package ecosystems:
 - Keeps dependencies up-to-date with security patches
 
 ### Workflow Template Integration
+
 Add organization-standard workflows to repositories:
+
 - Deploy CI/CD workflows from a central repository
 - Ensure consistent security practices across all repos
 - Automatically add workflows like security scanning, testing, etc.
@@ -380,6 +415,7 @@ Add organization-standard workflows to repositories:
 ## Action Management
 
 ### Exempting Actions from Pinning
+
 ```hcl
 actions_to_exempt_while_pinning = [
   "actions/checkout",
@@ -389,6 +425,7 @@ actions_to_exempt_while_pinning = [
 ```
 
 ### Replacing Actions with StepSecurity Alternatives
+
 ```hcl
 actions_to_replace_with_step_security_actions = [
   "EnricoMi/publish-unit-test-result-action",
@@ -397,11 +434,13 @@ actions_to_replace_with_step_security_actions = [
 ```
 
 ### Configuring Pre-commit Hooks
+
 ```hcl
-update_precommit_file = [".pre-commit-config.yaml", ".pre-commit-config.yml"]
+update_precommit_file = ["eslint", "gitleaks"]
 ```
 
 ### Dependency Update Configuration
+
 ```hcl
 package_ecosystem = [
   {
@@ -420,6 +459,7 @@ package_ecosystem = [
 ```
 
 ### Adding Workflow Templates
+
 ```hcl
 add_workflows = "https://github.com/my-org/workflow-templates"
 ```
@@ -427,17 +467,19 @@ add_workflows = "https://github.com/my-org/workflow-templates"
 ## Security Best Practices
 
 1. **API Key Management**: Use environment variables for sensitive data:
+
    ```bash
    export TF_VAR_step_security_api_key="your-api-key"
    export TF_VAR_step_security_customer="your-customer-id"
    ```
 
-2. **Repository Selection**: 
+2. **Repository Selection**:
+
    - Use specific repository lists for critical environments
-   - Use wildcard "*" judiciously
+   - Use wildcard "\*" judiciously
    - Consider using patterns for logical grouping
 
-3. **Gradual Rollout**: 
+3. **Gradual Rollout**:
    - Start with non-critical repositories
    - Enable features incrementally
    - Monitor PR creation and feedback
@@ -454,6 +496,7 @@ import {
 ```
 
 Or use the CLI:
+
 ```bash
 terraform import stepsecurity_policy_driven_pr.example your-organization-name
 ```
