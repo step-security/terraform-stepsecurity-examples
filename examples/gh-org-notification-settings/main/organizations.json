@@ -19,7 +19,10 @@
         "suspicious_process_events_detected": true,
         "harden_runner_config_changes_detected": true,
         "non_compliant_artifact_detected": false,
-        "run_blocked_by_policy": false
+        "run_blocked_by_policy": false,
+        "baseline_check_failures": false,
+        "required_check_failures": false,
+        "optional_check_failures": false
       }
     },
     {
@@ -41,12 +44,16 @@
         "suspicious_process_events_detected": false,
         "harden_runner_config_changes_detected": false,
         "non_compliant_artifact_detected": false,
-        "run_blocked_by_policy": false
+        "run_blocked_by_policy": false,
+        "baseline_check_failures": false,
+        "required_check_failures": false,
+        "optional_check_failures": false
       }
     },
     {
       "owner": "your-prod-org",
       "notification_channels": {
+        "slack_notification_method": "webhook",
         "slack_webhook_url": "https://hooks.slack.com/services/YOUR/PROD/WEBHOOK",
         "teams_webhook_url": "https://outlook.office.com/webhook/your-teams-webhook",
         "email": "prod-security@yourcompany.com"
@@ -63,7 +70,35 @@
         "suspicious_process_events_detected": true,
         "harden_runner_config_changes_detected": true,
         "non_compliant_artifact_detected": true,
-        "run_blocked_by_policy": true
+        "run_blocked_by_policy": true,
+        "baseline_check_failures": true,
+        "required_check_failures": true,
+        "optional_check_failures": false
+      }
+    },
+    {
+      "owner": "your-oauth-org",
+      "notification_channels": {
+        "slack_notification_method": "oauth",
+        "slack_channel_id": "C01234567890",
+        "email": "security@yourcompany.com"
+      },
+      "notification_events": {
+        "domain_blocked": true,
+        "file_overwrite": true,
+        "new_endpoint_discovered": true,
+        "https_detections": true,
+        "secrets_detected": true,
+        "artifacts_secrets_detected": true,
+        "imposter_commits_detected": true,
+        "suspicious_network_call_detected": true,
+        "suspicious_process_events_detected": true,
+        "harden_runner_config_changes_detected": true,
+        "non_compliant_artifact_detected": false,
+        "run_blocked_by_policy": false,
+        "baseline_check_failures": false,
+        "required_check_failures": false,
+        "optional_check_failures": false
       }
     }
   ]
