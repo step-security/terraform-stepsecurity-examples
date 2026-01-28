@@ -46,6 +46,10 @@ resource "stepsecurity_policy_driven_pr" "example" {
     pin_actions_to_sha                            = true
     restrict_github_token_permissions             = true
     secure_docker_file                            = true
+    labels_to_replace = {
+      "ubuntu-latest-8-cores" = "ubuntu-latest"
+      "windows-latest-large"  = "windows-latest"
+    }
     actions_to_exempt_while_pinning               = ["actions/checkout", "actions/setup-node"]
     actions_to_replace_with_step_security_actions = ["EnricoMi/publish-unit-test-result-action"]
     update_precommit_file                         = ["eslint"]

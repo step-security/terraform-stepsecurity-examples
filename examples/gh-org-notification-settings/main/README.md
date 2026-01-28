@@ -71,7 +71,9 @@ This example configures notification settings for multiple GitHub organizations 
         "domain_blocked": true,
         "secrets_detected": true,
         "file_overwrite": true,
-        "new_endpoint_discovered": true
+        "new_endpoint_discovered": true,
+        "baseline_check_failures": false,
+        "required_check_failures": false
       }
     },
     {
@@ -83,7 +85,8 @@ This example configures notification settings for multiple GitHub organizations 
       "notification_events": {
         "domain_blocked": true,
         "secrets_detected": true,
-        "new_endpoint_discovered": false
+        "new_endpoint_discovered": false,
+        "required_check_failures": false
       }
     },
     {
@@ -98,7 +101,9 @@ This example configures notification settings for multiple GitHub organizations 
         "domain_blocked": true,
         "secrets_detected": true,
         "file_overwrite": true,
-        "new_endpoint_discovered": true
+        "new_endpoint_discovered": true,
+        "baseline_check_failures": true,
+        "required_check_failures": true
       }
     },
     {
@@ -111,7 +116,8 @@ This example configures notification settings for multiple GitHub organizations 
       "notification_events": {
         "domain_blocked": true,
         "secrets_detected": true,
-        "file_overwrite": true
+        "file_overwrite": true,
+        "baseline_check_failures": false
       }
     }
   ]
@@ -228,6 +234,12 @@ notification_channels = {
 - **`non_compliant_artifact_detected`**: Non-compliant artifacts detected
 - **`run_blocked_by_policy`**: Run blocked by policy
 
+### Check Failure Events (Disabled by Default)
+
+- **`baseline_check_failures`**: Baseline check failures detected
+- **`required_check_failures`**: Required check failures detected
+- **`optional_check_failures`**: Optional check failures detected
+
 ## Customization
 
 To customize the notification settings:
@@ -254,7 +266,8 @@ To customize the notification settings:
       "notification_events": {
         "domain_blocked": true,
         "secrets_detected": true,
-        "file_overwrite": true
+        "file_overwrite": true,
+        "baseline_check_failures": false
       }
     }
   ]
@@ -278,7 +291,8 @@ To customize the notification settings:
       "notification_events": {
         "domain_blocked": true,
         "secrets_detected": true,
-        "file_overwrite": true
+        "file_overwrite": true,
+        "required_check_failures": false
       }
     }
   ]

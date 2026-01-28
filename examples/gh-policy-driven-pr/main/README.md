@@ -105,6 +105,10 @@ resource "stepsecurity_policy_driven_pr" "example" {
     pin_actions_to_sha                            = true
     restrict_github_token_permissions             = true
     secure_docker_file                            = true
+    labels_to_replace = {
+      "ubuntu-latest-8-cores" = "ubuntu-latest"
+      "windows-latest-large"  = "windows-latest"
+    }
     actions_to_exempt_while_pinning               = ["actions/checkout", "actions/setup-node"]
     actions_to_replace_with_step_security_actions = ["EnricoMi/publish-unit-test-result-action"]
     update_precommit_file                         = ["eslint"]
@@ -169,6 +173,10 @@ This pattern is useful for:
 - `actions_to_exempt_while_pinning`: Array of actions to exclude from SHA pinning
 - `actions_to_replace_with_step_security_actions`: Array of actions to replace with StepSecurity alternatives
 
+#### Runner Label Management
+
+- `labels_to_replace`: Map of runner labels to replace (e.g., replace custom/large runner labels with standard ones)
+
 #### Advanced Features (v2)
 
 - `update_precommit_file`: Array of pre-commit config files to update with security hooks
@@ -213,6 +221,10 @@ resource "stepsecurity_policy_driven_pr" "comprehensive" {
     pin_actions_to_sha                            = true
     restrict_github_token_permissions             = true
     secure_docker_file                            = true
+    labels_to_replace = {
+      "ubuntu-latest-8-cores" = "ubuntu-latest"
+      "windows-latest-large"  = "windows-latest"
+    }
     actions_to_exempt_while_pinning               = ["actions/checkout", "actions/setup-node"]
     actions_to_replace_with_step_security_actions = ["EnricoMi/publish-unit-test-result-action", "dorny/test-reporter"]
     update_precommit_file                         = ["eslint"]
@@ -411,6 +423,32 @@ Add organization-standard workflows to repositories:
 - Ensure consistent security practices across all repos
 - Automatically add workflows like security scanning, testing, etc.
 - Supports custom workflow template repositories
+
+## Runner Label Management
+
+### Replacing Runner Labels
+
+The `labels_to_replace` field allows you to replace GitHub Actions runner labels in workflows. This is useful for normalizing runner configurations across repositories or replacing custom/large runner labels with standard ones.
+
+```hcl
+labels_to_replace = {
+  "ubuntu-latest-8-cores" = "ubuntu-latest"
+  "windows-latest-large"  = "windows-latest"
+  "macos-latest-xlarge"   = "macos-latest"
+}
+```
+
+**Use cases:**
+- **Cost Optimization**: Replace large/custom runner labels with standard runners to reduce costs
+- **Standardization**: Ensure all repositories use consistent runner labels
+- **Migration**: Migrate from custom/self-hosted runners to GitHub-hosted runners
+- **Testing**: Replace production runners with smaller runners for testing purposes
+
+**How it works:**
+- StepSecurity scans workflow files for `runs-on` declarations
+- When a label in the map's keys is found, it's replaced with the corresponding value
+- Changes are submitted via automated pull requests for review
+- Only exact matches are replaced (case-sensitive)
 
 ## Action Management
 
