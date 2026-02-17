@@ -251,6 +251,28 @@ resource "stepsecurity_policy_driven_pr" "org_level_with_exclusions" {
 }
 ```
 
+### Topic-Based Repository Filtering
+
+```hcl
+resource "stepsecurity_policy_driven_pr" "topic_filtered" {
+  owner          = "my-org"
+  selected_repos = ["*"]
+  selected_repos_filter = {
+    include_repos_only_with_topics = ["production", "security-critical"]
+  }
+
+  auto_remediation_options = {
+    create_pr                             = true
+    create_issue                          = false
+    create_github_advanced_security_alert = false
+    harden_github_hosted_runner           = true
+    pin_actions_to_sha                    = true
+    restrict_github_token_permissions     = true
+    secure_docker_file                    = true
+  }
+}
+```
+
 ### Development Environment Policy
 
 ```hcl
@@ -344,6 +366,52 @@ excluded_repos = ["archived-repo", "legacy-app", "test-sandbox"]
 **Important:** `excluded_repos` can only be used when `selected_repos = ["*"]`. Using it with specific repo names will result in a validation error.
 
 **Tip:** You can define multiple resources - one with org-wide config and exclusions, and others with specific policies for excluded repos. This allows you to implement sophisticated security patterns as shown in the main.tf example.
+
+### Filtering by Repository Topics
+
+Apply policy only to repositories with specific GitHub topics:
+
+```hcl
+selected_repos = ["*"]
+selected_repos_filter = {
+  include_repos_only_with_topics = ["production", "security-critical"]
+}
+```
+
+**How it works:**
+
+- `selected_repos_filter` allows you to apply policies based on GitHub repository topics
+- `include_repos_only_with_topics` specifies an array of topics - only repos with these topics will be included
+- Can be combined with `selected_repos = ["*"]` for organization-wide filtering
+- Can be combined with `excluded_repos` to further refine repository selection
+
+**Use cases:**
+
+- **Environment-based policies**: Apply stricter policies to repos tagged with "production" or "staging"
+- **Security classification**: Target repos tagged as "security-critical" or "compliance-required"
+- **Team-based policies**: Apply policies to repos managed by specific teams using team-specific topics
+- **Technology-specific policies**: Target repos with topics like "nodejs", "python", or "docker"
+
+**Example with topics and exclusions:**
+
+```hcl
+resource "stepsecurity_policy_driven_pr" "production_repos" {
+  owner          = "my-org"
+  selected_repos = ["*"]
+  selected_repos_filter = {
+    include_repos_only_with_topics = ["production", "security-critical"]
+  }
+  excluded_repos = ["legacy-prod-app"] # Exclude specific production repos
+
+  auto_remediation_options = {
+    create_pr                             = true
+    harden_github_hosted_runner           = true
+    pin_actions_to_sha                    = true
+    restrict_github_token_permissions     = true
+    secure_docker_file                    = true
+  }
+}
+```
 
 ### Pattern Matching
 
