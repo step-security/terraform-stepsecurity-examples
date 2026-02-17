@@ -16,7 +16,10 @@ Comprehensive example showing how to configure policy-driven PR settings for a s
   - Pre-commit hook management
   - Automated dependency updates (npm, pip, docker, etc.)
   - Workflow template integration
-- Repository selection examples
+- Repository selection and filtering:
+  - Select specific repositories or all repositories with wildcards
+  - Filter repositories by GitHub topics
+  - Exclude specific repositories from organization-wide policies
 - Comprehensive documentation
 
 **Best for:** Getting started with StepSecurity policy-driven PRs, production deployments with comprehensive security coverage, organizations wanting automated security remediation.
