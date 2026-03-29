@@ -16,9 +16,9 @@ provider "stepsecurity" {
 # Load organizations configuration from JSON file
 locals {
   organizations_config = jsondecode(file(var.organizations_json_file))
-  organizations = { 
-    for org in local.organizations_config.organizations : 
-    org.owner => org 
+  organizations = {
+    for org in local.organizations_config.organizations :
+    org.owner => org
   }
 }
 
@@ -29,9 +29,11 @@ resource "stepsecurity_github_org_notification_settings" "org_notifications" {
   owner = each.value.owner
 
   notification_channels = {
-    slack_webhook_url = try(each.value.notification_channels.slack_webhook_url, null)
-    teams_webhook_url = try(each.value.notification_channels.teams_webhook_url, null)
-    email             = try(each.value.notification_channels.email, null)
+    slack_webhook_url         = try(each.value.notification_channels.slack_webhook_url, null)
+    teams_webhook_url         = try(each.value.notification_channels.teams_webhook_url, null)
+    email                     = try(each.value.notification_channels.email, null)
+    slack_notification_method = try(each.value.notification_channels.slack_notification_method, null)
+    slack_channel_id          = try(each.value.notification_channels.slack_channel_id, null)
   }
 
   notification_events = {
@@ -47,5 +49,8 @@ resource "stepsecurity_github_org_notification_settings" "org_notifications" {
     harden_runner_config_changes_detected = try(each.value.notification_events.harden_runner_config_changes_detected, true)
     non_compliant_artifact_detected       = try(each.value.notification_events.non_compliant_artifact_detected, false)
     run_blocked_by_policy                 = try(each.value.notification_events.run_blocked_by_policy, false)
+    baseline_check_failures               = try(each.value.notification_events.baseline_check_failures, false)
+    required_check_failures               = try(each.value.notification_events.required_check_failures, false)
+    optional_check_failures               = try(each.value.notification_events.optional_check_failures, false)
   }
 }
