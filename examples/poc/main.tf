@@ -147,3 +147,37 @@ resource "stepsecurity_github_policy_store_attachment" "poc" {
   # the policy store has fully propagated server-side and returns a 500.
   depends_on = [stepsecurity_github_policy_store.poc]
 }
+
+# -----------------------------------------------------------------------------
+# Run policy: block known-compromised actions on PoC repos
+# -----------------------------------------------------------------------------
+resource "stepsecurity_github_run_policy" "poc_compromised_actions" {
+  owner        = var.poc_org
+  name         = "PoC Compromised Actions Policy"
+  repositories = var.poc_repos
+
+  policy_config = {
+    owner                             = var.poc_org
+    name                              = "PoC Compromised Actions Policy"
+    enable_compromised_actions_policy = true
+  }
+}
+
+# -----------------------------------------------------------------------------
+# Run policy: flag workflow runs whose jobs don't use step-security/harden-runner.
+# Running in dry-run mode for the PoC: violations are reported but not blocked.
+# Empty harden_runner_target_labels applies to every job.
+# -----------------------------------------------------------------------------
+resource "stepsecurity_github_run_policy" "poc_harden_runner" {
+  owner        = var.poc_org
+  name         = "PoC Harden Runner Enforcement"
+  repositories = var.poc_repos
+
+  policy_config = {
+    owner                       = var.poc_org
+    name                        = "PoC Harden Runner Enforcement"
+    enable_harden_runner_policy = true
+    harden_runner_target_labels = []
+    is_dry_run                  = true
+  }
+}
