@@ -1,0 +1,81 @@
+name: "PoC: Apply StepSecurity config"
+
+on:
+  workflow_dispatch:
+    inputs:
+      poc_org:
+        description: "GitHub organization name to apply the PoC to"
+        required: true
+        type: string
+      poc_repos:
+        description: "Comma-separated repo names within the org (e.g. repo-a,repo-b)"
+        required: true
+        type: string
+      action:
+        description: "Terraform action"
+        required: true
+        type: choice
+        default: plan
+        options:
+          - plan
+          - apply
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: "Terraform ${{ inputs.action }}"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/poc
+
+    env:
+      STEP_SECURITY_API_KEY: ${{ secrets.STEP_SECURITY_API_KEY }}
+      STEP_SECURITY_CUSTOMER: ${{ secrets.STEP_SECURITY_CUSTOMER }}
+      TF_VAR_poc_org: ${{ inputs.poc_org }}
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ~1.7.0
+
+      - name: Build poc_repos JSON list
+        id: vars
+        run: |
+          repos_json=$(echo '${{ inputs.poc_repos }}' \
+            | jq -Rc 'split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))')
+          echo "TF_VAR_poc_repos=${repos_json}" >> "$GITHUB_ENV"
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        run: terraform plan -no-color -input=false -out=tfplan
+
+      - name: Terraform Apply
+        if: inputs.action == 'apply'
+        run: terraform apply -auto-approve -input=false tfplan
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## StepSecurity PoC — \`${{ inputs.action }}\`"
+            echo ""
+            echo "- **Org:** \`${{ inputs.poc_org }}\`"
+            echo "- **Repos:** \`${{ inputs.poc_repos }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

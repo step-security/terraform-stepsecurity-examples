@@ -66,6 +66,12 @@ Each resource directory contains:
 - **main/**: Basic working example with detailed README
 - **README.md**: Resource overview and available examples
 
+### End-to-End PoC
+
+[examples/poc](./examples/poc) is an end-to-end Proof of Concept that wires up multiple resources together — `stepsecurity_github_checks`, `stepsecurity_github_pr_template`, `stepsecurity_policy_driven_pr`, and `stepsecurity_github_policy_store` + `_attachment` (attached at the repo level) — scoped to a short list of repos in a single org.
+
+It's paired with a `workflow_dispatch` workflow at [.github/workflows/poc-apply.yml](./.github/workflows/poc-apply.yml) that takes the target org and a comma-separated repo list as inputs, so you can plan and apply the PoC against a customer org directly from the Actions tab. See [examples/poc/README.md](./examples/poc/README.md) for setup details.
+
 ## 🔐 Authentication
 
 The StepSecurity provider requires authentication using API keys. Set up your credentials:
