@@ -8,6 +8,8 @@ A small, end-to-end Terraform example intended for a Proof of Concept. It wires 
 | `stepsecurity_github_pr_template` | Org-level PR title / body / commit message used by policy-driven PRs. |
 | `stepsecurity_policy_driven_pr` | Auto-remediation PRs (harden runner, pin actions, restrict `GITHUB_TOKEN`) on the PoC repos. |
 | `stepsecurity_github_policy_store` + `_attachment` | A block-mode egress policy (only the listed endpoints are reachable), attached at the **repo level** to each PoC repo. |
+| `stepsecurity_github_run_policy` (compromised actions) | Blocks runs that reference known-compromised actions, scoped to the PoC repos. |
+| `stepsecurity_github_run_policy` (harden runner) | Flags runs whose jobs don't use `step-security/harden-runner` (dry-run mode), scoped to the PoC repos. |
 
 ## Variables
 
