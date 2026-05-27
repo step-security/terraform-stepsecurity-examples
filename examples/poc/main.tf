@@ -142,4 +142,8 @@ resource "stepsecurity_github_policy_store_attachment" "poc" {
       }
     ]
   }
+
+  # Explicit depends_on avoids a race where the attachment API fires before
+  # the policy store has fully propagated server-side and returns a 500.
+  depends_on = [stepsecurity_github_policy_store.poc]
 }
