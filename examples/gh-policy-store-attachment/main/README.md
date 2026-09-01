@@ -72,6 +72,7 @@ The attachment logic has been simplified:
 
 - **Repository + workflows specified**: Policy applies only to those specific workflow files
 - **Repository + no workflows**: Policy applies to the entire repository
+- **Repository name with `*` wildcards + workflows**: Policy applies to those workflow files in every matching repository (`*` for all repositories, `service-*` for a prefix); pattern entries must list workflows
 - **`apply_to_org: true`**: Policy applies to the entire organization
 - **Clusters specified**: Policy applies to the specified Kubernetes clusters
 
@@ -178,6 +179,37 @@ Apply policies to specific workflow files within repositories:
 - Applying stricter policies to production deployment workflows
 - Different security requirements for CI vs deployment workflows
 - Granular control over specific workflow security
+
+### Wildcard Repository Pattern Attachments
+
+Apply a policy to a workflow by file name across all repositories, or across repositories matching a wildcard pattern. The repository `name` supports `*` wildcards: `*` matches all repositories and `service-*` matches repositories with the `service-` prefix. Pattern entries must list at least one workflow and cannot apply to entire repositories.
+
+```json
+{
+  "owner": "my-organization",
+  "policy_name": "org-wide-workflow-policy",
+  "org": {
+    "repositories": [
+      {
+        "name": "*",
+        "workflows": ["security-scan.yml"]
+      },
+      {
+        "name": "service-*",
+        "workflows": ["deploy.yml"]
+      }
+    ]
+  }
+}
+```
+
+When multiple attachments match the same workflow run, the most specific one wins: exact repo + workflow > pattern repo + workflow > repository-level > organization-level > cluster-level. Among matching patterns, the one with the longest literal (non-wildcard) part wins.
+
+**Use cases:**
+
+- One policy for a standardized workflow file (for example `security-scan.yml`) rolled out across every repository, including repositories created later
+- Applying a policy to a workflow across a family of repositories that share a naming convention (for example `service-*`)
+- Avoiding per-repository attachment entries that need updating whenever repositories are added
 
 ### Repository-Level Attachments
 

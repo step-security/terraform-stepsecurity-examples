@@ -23,6 +23,26 @@
     },
     {
       "owner": "my-organization",
+      "policy_name": "org-wide-workflow-policy",
+      "org": {
+        "repositories": [
+          {
+            "name": "*",
+            "workflows": [
+              "security-scan.yml"
+            ]
+          },
+          {
+            "name": "service-*",
+            "workflows": [
+              "deploy.yml"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "owner": "my-organization",
       "policy_name": "repo-policy",
       "org": {
         "repositories": [
