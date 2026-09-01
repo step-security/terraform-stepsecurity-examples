@@ -13,6 +13,7 @@ Policy store attachments provide granular control over where existing policies a
 The main example demonstrates comprehensive policy store attachment configurations including:
 
 - **Workflow-level attachments**: Attaching policies to specific workflow files
+- **Wildcard repository patterns**: Attaching policies to a workflow file name across all repositories (`*`) or repositories matching a pattern (`service-*`)
 - **Repository-level attachments**: Attaching policies to entire repositories
 - **Organization-level attachments**: Attaching policies organization-wide
 - **Cluster-level attachments**: Attaching policies to Kubernetes clusters
